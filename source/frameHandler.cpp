@@ -129,6 +129,21 @@ void frameHandler::setFrameSize(const QSize &newSize)
   }
 }
 
+void frameHandler::updateControls()
+{
+  // prevent signal loops
+  const QSignalBlocker blocker1(ui.widthSpinBox);
+  const QSignalBlocker blocker2(ui.heightSpinBox);
+  const QSignalBlocker blocker3(ui.frameSizeComboBox);
+
+  ui.widthSpinBox->setValue(frameSize.width());
+  ui.heightSpinBox->setValue(frameSize.height());
+  int idx = presetFrameSizes.findSize(frameSize);
+  ui.frameSizeComboBox->setCurrentIndex(idx);
+
+  emit signalHandlerChanged(true, RECACHE_CLEAR);
+}
+
 bool frameHandler::loadCurrentImageFromFile(const QString &filePath)
 {
   // Load the image and return if loading was successful
