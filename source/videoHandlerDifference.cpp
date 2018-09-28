@@ -147,6 +147,24 @@ void videoHandlerDifference::setInputVideos(frameHandler *childVideo0, frameHand
     inputVideo[0] = childVideo0;
     inputVideo[1] = childVideo1;
 
+    // adapt frame size if exactly one of the two videos has an invalid size
+    if (childVideo0 && childVideo1)
+    {
+      QSize size0 = inputVideo[0]->getFrameSize();
+      QSize size1 = inputVideo[1]->getFrameSize();
+
+      if( size0.isEmpty() && !size1.isEmpty() )
+      {
+        inputVideo[0]->setFrameSize( size1 );
+        inputVideo[0]->updateControls();
+      }
+      else if( size1.isEmpty() && !size0.isEmpty() )
+      {
+        inputVideo[1]->setFrameSize( size0 );
+        inputVideo[1]->updateControls();
+      }
+    }
+
     if (inputsValid())
     {
       // We have two valid video "children"

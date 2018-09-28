@@ -105,24 +105,6 @@ void playlistItemDifference::drawItem(QPainter *painter, int frameIdx, double zo
     if (childCount() >= 2)
       childVideo1 = getChildPlaylistItem(1)->getFrameHandler();
 
-    // adapt frame size if exactly one of the two videos has an invalid size
-    if (childVideo0 && childVideo1)
-    {
-      QSize size0 = childVideo0->getFrameSize();
-      QSize size1 = childVideo1->getFrameSize();
-
-      if( size0.isEmpty() && !size1.isEmpty() )
-      {
-        childVideo0->setFrameSize( size1 );
-        childVideo0->updateControls();
-      }
-      else if( size1.isEmpty() && !size0.isEmpty() )
-      {
-        childVideo1->setFrameSize( size0 );
-        childVideo1->updateControls();
-      }
-    }
-
     difference.setInputVideos(childVideo0, childVideo1);
 
     // Update the frame range
