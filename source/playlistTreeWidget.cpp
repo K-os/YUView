@@ -649,7 +649,7 @@ void PlaylistTreeWidget::loadFiles(const QStringList &files)
 
   for (auto &fileName : files)
   {
-    if (fileName == "-d")
+    if (fileName=="-d" || fileName=="-diff")
     {
       filesToOpen.append(fileName);
     }
@@ -679,13 +679,15 @@ void PlaylistTreeWidget::loadFiles(const QStringList &files)
       filesToOpen.append(fileName);
   }
 
+  bool addDiff = false;
   // Open all files that are in filesToOpen
-  int addDiff = -1;
   for (auto filePath : filesToOpen)
   {
-    if (filePath == "-d")
+    if (filePath=="-d" || filePath=="-diff")
     {
-      addDiff = 2;
+      // select the next two added items and combine them into a difference item
+      addDiff = true;
+      clearSelection();
       continue;
     }
 
@@ -712,15 +714,18 @@ void PlaylistTreeWidget::loadFiles(const QStringList &files)
         addFileToRecentFileSetting(filePath);
         p_isSaved = false;
 
-        if (addDiff>0)
+        if (addDiff)
         {
-          --addDiff;
           newItem->setSelected(true);
-        }
-        if (addDiff==0)
-        {
-          --addDiff;
-          addDifferenceItem();
+
+          if(selectedItems().length() == 2)
+          {
+            addDifferenceItem();
+            addDiff = false;
+
+            // TODO: why does it crash when lastAddedItem is NULL or the difference item
+            lastAddedItem = nullptr;    // the current item has already been set by addDifferenceItem()
+          }
         }
       }
     }
@@ -730,6 +735,8 @@ void PlaylistTreeWidget::loadFiles(const QStringList &files)
 
   if (lastAddedItem)
   {
+//    const QScopedValueRollback<bool> back(ignoreSlotSelectionChanged, true);
+
     // Something was added. Select the last added item.
     setCurrentItem(lastAddedItem, 0, QItemSelectionModel::ClearAndSelect);
 
