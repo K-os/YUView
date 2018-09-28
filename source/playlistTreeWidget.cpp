@@ -649,6 +649,11 @@ void PlaylistTreeWidget::loadFiles(const QStringList &files)
 
   for (auto &fileName : files)
   {
+    if (fileName == "-d")
+    {
+      filesToOpen.append(fileName);
+    }
+
     if (!(QFile(fileName).exists()))
       continue;
 
@@ -675,8 +680,15 @@ void PlaylistTreeWidget::loadFiles(const QStringList &files)
   }
 
   // Open all files that are in filesToOpen
+  int addDiff = -1;
   for (auto filePath : filesToOpen)
   {
+    if (filePath == "-d")
+    {
+      addDiff = 2;
+      continue;
+    }
+
     QFileInfo fi(filePath);
 
     QString ext = fi.suffix().toLower();
@@ -699,6 +711,17 @@ void PlaylistTreeWidget::loadFiles(const QStringList &files)
         // Add the file as one of the recently openend files.
         addFileToRecentFileSetting(filePath);
         p_isSaved = false;
+
+        if (addDiff>0)
+        {
+          --addDiff;
+          newItem->setSelected(true);
+        }
+        if (addDiff==0)
+        {
+          --addDiff;
+          addDifferenceItem();
+        }
       }
     }
   }
