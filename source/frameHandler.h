@@ -62,11 +62,11 @@ public:
   // Draw the (current) frame with the given zoom factor
   void drawFrame(QPainter *painter, double zoomFactor, bool drawRawValues);
 
-  // Set internal frame size. Controls need to be updated using updateControls()
+  // Set internal frame size
   virtual void setFrameSize(const QSize &size);
 
-  // update the ui controls to reflect the internal state of the frameHandler
-  virtual void updateControls();
+  // Set the frame size through UI controls, triggering all required updates
+  virtual void setFrameSizeControls(QSize newSize);
 
   // Return the RGB values of the given pixel. If a second item is provided, return the difference values to that item.
   virtual ValuePairList getPixelValues(const QPoint &pixelPos, int frameIdx, frameHandler *item2=nullptr, const int frameIdx1=0);

@@ -155,13 +155,11 @@ void videoHandlerDifference::setInputVideos(frameHandler *childVideo0, frameHand
 
       if( size0.isEmpty() && !size1.isEmpty() )
       {
-        inputVideo[0]->setFrameSize( size1 );
-        inputVideo[0]->updateControls();
+        inputVideo[0]->setFrameSizeControls(size1);
       }
       else if( size1.isEmpty() && !size0.isEmpty() )
       {
-        inputVideo[1]->setFrameSize( size0 );
-        inputVideo[1]->updateControls();
+        inputVideo[1]->setFrameSizeControls(size0);
       }
     }
 
